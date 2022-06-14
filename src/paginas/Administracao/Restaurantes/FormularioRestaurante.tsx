@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import IRestaurante from "../../../interfaces/IRestaurante";
 import { Box } from "@mui/system";
+import http from "../../../http";
 
 const FormularioRestaurante = () => {
 
@@ -12,13 +13,13 @@ const FormularioRestaurante = () => {
 
     useEffect(() => {
         if (parametros.id) {
-            axios.get<IRestaurante>(`http://localhost:8000/api/v2/restaurantes/${parametros.id}/`)
+            http.get<IRestaurante>(`restaurantes/${parametros.id}/`)
                 .then(responta => {
                     console.log(responta)
                     setNomeRestaurante(responta.data.nome);
                 })
         }
-    })
+    },[parametros])
     const [nomeRestaurante, setNomeRestaurante] = useState('');
 
 
@@ -27,7 +28,7 @@ const FormularioRestaurante = () => {
         evt.preventDefault();
 
         if (parametros.id) {
-            axios.put(`http://localhost:8000/api/v2/restaurantes/${parametros.id}/`, {
+            http.put(`restaurantes/${parametros.id}/`, {
                 nome: nomeRestaurante
             })
                 .then(() => {
@@ -35,7 +36,7 @@ const FormularioRestaurante = () => {
                 })
         }
         else {
-            axios.post("http://localhost:8000/api/v2/restaurantes/", {
+            http.post("restaurantes/", {
                 nome: nomeRestaurante
             })
                 .then(() => {
@@ -53,9 +54,11 @@ const FormularioRestaurante = () => {
                 <TextField value={nomeRestaurante}
                     onChange={evt => setNomeRestaurante(evt.target.value)}
                     id="standard-basic" label="Nome do Restaurante" variant="standard"
+                    fullWidth
+                    required
                 />
 
-                <Button type="submit" variant="outlined">Salvar</Button>
+                <Button sx={{marginTop:1}} fullWidth type="submit" variant="outlined">Salvar</Button>
             </Box>
         </Box>
 
