@@ -18,6 +18,7 @@ const ListaRestaurantes = () => {
   const [paginaAnterior, setPaginaAnterior] = useState('')
 
   const [busca, setBusca] = useState('')
+  const [ordem, setOrdem] = useState('')
 
   // agora, o carregarDados recebe opcionalmente as opções de configuração do axios
   const carregarDados = (url: string, opcoes: AxiosRequestConfig = {}) => {
@@ -44,6 +45,9 @@ const ListaRestaurantes = () => {
     if (busca) {
       opcoes.params.search = busca
     }
+    if(ordem){
+      opcoes.params.ordering = ordem;
+    }
     carregarDados('http://localhost:8000/api/v1/restaurantes/', opcoes)
   }
 
@@ -52,11 +56,16 @@ const ListaRestaurantes = () => {
     carregarDados('http://localhost:8000/api/v1/restaurantes/')
   }, [])
 
+ 
   return (<section className={style.ListaRestaurantes}>
     <h1>Os restaurantes mais <em>bacanas</em>!</h1>
     <form onSubmit={buscar}>
       <input type="text" value={busca} onChange={evento => setBusca(evento.target.value)} />
       <button type='submit'>buscar</button>
+      <select onChange={evt=>setOrdem(evt.target.value)}>
+        <option value="id">Id</option>
+        <option value="nome">Nome</option>
+      </select>
     </form>
     {restaurantes?.map(item => <Restaurante restaurante={item} key={item.id} />)}
     {<button onClick={() => carregarDados(paginaAnterior)} disabled={!paginaAnterior}>
